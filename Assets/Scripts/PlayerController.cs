@@ -1,14 +1,17 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
     public float speed;
     public int health = 5;
     private int score = 0;
-
+    public Text scoreText;
+    public Text healthText;
+    public Text winlosetext;
+    public GameObject winloseBG;
 
     //3D vectors and points.
     Vector3 translateObj;
@@ -37,11 +40,18 @@ public class PlayerController : MonoBehaviour
     // Reload the scene when Health player is over
     void Update()
     {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            SceneManager.LoadScene("menu");
+        }
         if (health == 0)
         {
-            Debug.Log("Game Over!");
+            winloseBG.SetActive(true);
+            winloseBG.GetComponent<Image>().color = Color.red;
+            winlosetext.GetComponent<UnityEngine.UI.Text>().text = "Game Over!";
+            winlosetext.GetComponent<Text>().color =  Color.white;
             // Loads the Scene by its name or index in Build Settings
-            SceneManager.LoadScene(0, LoadSceneMode.Single);
+            StartCoroutine(LoadScene(3f));
         }
     }
 
@@ -52,7 +62,8 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Pickup"))
         {
             score++;
-            Debug.Log($"Score: {score}");
+            //update the Score
+            SetScoreText();
             // Destroy after touch the coin.
             Destroy(other.gameObject);
         }
@@ -60,12 +71,35 @@ public class PlayerController : MonoBehaviour
         if (other.CompareTag("Trap"))
         {
             health--;
-            Debug.Log($"Health: {health}");
+            SetHealthText();
         }
 
         if (other.CompareTag("Goal"))
         {
-            Debug.Log("You win!");
+            winloseBG.SetActive(true);
+            winloseBG.GetComponent<Image>().color = Color.green;
+            winlosetext.GetComponent<UnityEngine.UI.Text>().text = "You Win!";
+            winlosetext.GetComponent<Text>().color =  Color.black;
+            StartCoroutine(LoadScene(3f));
         }
+    }
+
+    //Update the ScoreText object with the Player‘s current score.
+    void SetScoreText()
+    {
+        scoreText.text = $"Score: {score}";
+    }
+
+    //Update the healtext object with the Player‘s current health.
+    void SetHealthText()
+    {
+        healthText.text = $"Health: {health}";
+    }
+
+    //wait 3 seconds to reload the scene when game over!
+    IEnumerator LoadScene(float seconds)
+    {
+        yield return new WaitForSeconds(seconds);
+        SceneManager.LoadScene(0, LoadSceneMode.Single);
     }
 }

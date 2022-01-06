@@ -886,6 +886,8 @@ MonoBehaviour:
   health: 5
   scoreText: {fileID: 133156877}
   healthText: {fileID: 1168771846}
+  winlosetext: {fileID: 1269846451}
+  winloseBG: {fileID: 1191555634}
 --- !u!4 &75441011 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9128857098819274805, guid: 19b3e87b643ef3b44bf5e5186536b21b,
